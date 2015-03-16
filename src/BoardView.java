@@ -1,8 +1,7 @@
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.Arrays;
+import java.awt.geom.Line2D;
 
 public class BoardView extends JFrame {
 	
@@ -33,6 +32,11 @@ public class BoardView extends JFrame {
 		createMode.getAccessibleContext().setAccessibleDescription("Enter creative mode");
 		createMode.addActionListener(controller.newCreateModeListener());
 		modeMenu.add(createMode);
+		JMenu solveMenu = new JMenu("Solve");
+		JMenuItem solve = new JMenuItem("Solve");
+		solve.addActionListener(controller.newSolveListener());
+		solveMenu.add(solve);
+		menuBar.add(solveMenu);
 		setJMenuBar(menuBar);
 		
 		columnNumbers = new JPanel();
@@ -100,7 +104,7 @@ public class BoardView extends JFrame {
 	public void updateView() {
 		updateNumbers();
 		updateBoard();
-		if (controller.isGameOver()) {
+		if (controller.isGameOver() && controller.currentMode == BoardController.GameMode.PLAY_MODE) {
 			System.out.println("Game Over: You Win!");
 		}
 	}
@@ -211,6 +215,5 @@ public class BoardView extends JFrame {
 											  {NonogramBoard.TileStatus.FILLED, NonogramBoard.TileStatus.EMPTY, NonogramBoard.TileStatus.FILLED, NonogramBoard.TileStatus.EMPTY,NonogramBoard.TileStatus.FILLED, NonogramBoard.TileStatus.EMPTY,NonogramBoard.TileStatus.FILLED, NonogramBoard.TileStatus.EMPTY, NonogramBoard.TileStatus.EMPTY, NonogramBoard.TileStatus.EMPTY}};
 		NonogramBoard nonogram = new NonogramBoard(tiles);
 		new BoardView(new BoardModel (nonogram));
-		NonogramXML.saveNonogramXML(nonogram, "Test");
 	}
 }

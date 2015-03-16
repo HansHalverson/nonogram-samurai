@@ -1,10 +1,8 @@
-import java.awt.Color;
 import java.awt.event.*;
 import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class BoardController {
@@ -12,6 +10,7 @@ public class BoardController {
 	BoardModel board;
 	GameMode currentMode;
 	BoardView view;
+	String boardName;
 	
 	public BoardController(BoardModel board, BoardView view) {
 		this.board = board;
@@ -44,8 +43,6 @@ public class BoardController {
 	
 	private class TileListener implements MouseListener {
 		
-		private boolean mousePressed = false;
-
 		public void mouseClicked(MouseEvent e) {}
 		
 		public void mouseEntered(MouseEvent e) {
@@ -126,6 +123,7 @@ public class BoardController {
 			JTextField source = (JTextField) event.getSource();
 			JFrame frame = (JFrame) source.getTopLevelAncestor();
 			frame.dispose();
+			currentMode = GameMode.PLAY_MODE;
 			view.resetTiles();
 			view.updateView();
 		}
@@ -141,7 +139,7 @@ public class BoardController {
 			JButton button = (JButton) event.getSource();
 			JTextField nameField = (JTextField) button.getParent().getComponent(0);
 			JTextField sizeField = (JTextField) button.getParent().getComponent(1);
-			String boardName = nameField.getText();
+			boardName = nameField.getText();
 			int boardSize = Integer.parseInt(sizeField.getText());
 			JFrame frame = (JFrame) button.getTopLevelAncestor();
 			frame.dispose();
@@ -150,6 +148,7 @@ public class BoardController {
 				Arrays.fill(tileArray[i], NonogramBoard.TileStatus.EMPTY);
 			}
 			NonogramBoard nonogram = new NonogramBoard(tileArray);
+			currentMode = GameMode.CREATE_MODE;
 			board = new BoardModel(nonogram);
 			view.setBoardModel(board);
 			view.resetTiles();
@@ -164,6 +163,21 @@ public class BoardController {
 	private class SaveButtonListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent event){
-			board.getPlayerBoard();
+			NonogramBoard.TileStatus[][] tiles = board.getPlayerBoard();
+			NonogramBoard toSave = new NonogramBoard(tiles);
+			NonogramXML.saveNonogramXML(toSave, boardName);
 		}
+	}
+	
+	public SolveListener newSolveListener() {
+		return new SolveListener();
+	}
+	
+	private class SolveListener implements ActionListener {
+		
+		public void actionPerformed(ActionEvent event) {
+			NonogramSolver solver = new NonogramSolver(BoardController.this);
+			solver.solve();
+		}
+	}
 }
