@@ -93,9 +93,9 @@ public class BoardView extends JFrame {
 				if (tile.getTileStatus() == NonogramBoard.TileStatus.EMPTY) {
 					tile.setBackground(Color.white);
 				} else if (tile.getTileStatus() == NonogramBoard.TileStatus.FILLED) {
-					tile.setBackground(Color.gray);
+					tile.setBackground(Color.darkGray);
 				} else if (tile.getTileStatus() == NonogramBoard.TileStatus.MARKED) {
-					tile.setBackground(Color.blue);
+					tile.setBackground(Color.white);
 				}
 			}
 		}
@@ -161,6 +161,18 @@ public class BoardView extends JFrame {
 		
 		public void setTileStatus(NonogramBoard.TileStatus tileStatus) {
 			this.tileStatus = tileStatus;
+		}
+		
+		@Override
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			if (this.tileStatus == NonogramBoard.TileStatus.MARKED) {
+				Graphics2D g2 = (Graphics2D) g;
+				g2.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+				g2.setColor(Color.gray);
+				g2.drawLine(7, 7, this.getWidth() - 7, this.getHeight() - 7);
+				g2.drawLine(7, this.getHeight() - 7, this.getWidth() - 7, 7);
+			}
 		}
 	}
 	

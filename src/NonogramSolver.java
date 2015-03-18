@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 public class NonogramSolver {
@@ -46,6 +48,7 @@ public class NonogramSolver {
 						if (condensed[j] == 1) {
 							currentBoard[i][j] = NonogramBoard.TileStatus.FILLED;
 							view.tileGrid[i][j].setTileStatus(NonogramBoard.TileStatus.FILLED);
+							System.out.println("Updating view...");
 							view.updateView();
 						}
 					}
@@ -62,7 +65,9 @@ public class NonogramSolver {
 						if (condensed[j] == 1) {
 							currentBoard[j][i] = NonogramBoard.TileStatus.FILLED;
 							view.tileGrid[j][i].setTileStatus(NonogramBoard.TileStatus.FILLED);
+							System.out.println("Updating view...");
 							view.updateView();
+							view.repaint(1);
 						}
 					}
 				}
